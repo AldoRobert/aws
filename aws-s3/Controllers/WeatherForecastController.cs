@@ -1,8 +1,11 @@
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Text.Json;
 
 namespace aws_s3.Controllers
 {
@@ -52,6 +55,8 @@ namespace aws_s3.Controllers
          *    5.- Delete a file from a Bucket
          *    
          *    TODO: 6.- Add Dependency Injection for s3Client 
+         *    
+         *    7.- SNS create a message in a topic (SNS).
          */
 
 
@@ -177,6 +182,31 @@ namespace aws_s3.Controllers
             await client.DeleteObjectAsync(BucketName2, fileName);
         }
 
+        //7.- SNS create a message in a topic(SNS).
+        [HttpPost("PostSNS")]
+        public async Task PostSNS(WeatherForecast data)
+        {
+            var config = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile("appsettings.json")
+                          .Build();
+
+            var accessKey = config.GetValue<string>("AccessKey");
+            var secret = config.GetValue<string>("Secret");
+
+            var credentials = new BasicAWSCredentials(accessKey, secret);
+
+            var client = new AmazonSimpleNotificationServiceClient(credentials, Amazon.RegionEndpoint.USEast2);
+
+            var request = new PublishRequest()
+            {
+                TopicArn = "arn:aws:sns:us-east-2:050752614353:youtube-sns",
+                Message = JsonSerializer.Serialize(data),
+                Subject = "NewWeatherDataAdded"
+            };
+
+            var response = await client.PublishAsync(request);
+        }
     }
 
 }
