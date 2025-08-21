@@ -57,6 +57,8 @@ namespace aws_s3.Controllers
          *    TODO: 6.- Add Dependency Injection for s3Client 
          *    
          *    7.- SNS create a message in a topic (SNS).
+         *    
+         *    8.- added WeatherDataProcessor project
          */
 
 
@@ -204,6 +206,15 @@ namespace aws_s3.Controllers
                 Message = JsonSerializer.Serialize(data),
                 Subject = "NewWeatherDataAdded"
             };
+
+            request.MessageAttributes = new Dictionary<string, MessageAttributeValue>();
+
+
+            request.MessageAttributes.Add("Month", new MessageAttributeValue()
+            {
+                DataType="String",
+                StringValue=data.Date.ToString("MMMM")
+            });
 
             var response = await client.PublishAsync(request);
         }

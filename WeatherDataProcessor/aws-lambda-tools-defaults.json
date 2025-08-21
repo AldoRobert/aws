@@ -14,13 +14,14 @@
     "function-timeout"     : 30,
     "function-handler"     : "WeatherDataProcessor::WeatherDataProcessor.Function::FunctionHandler",
     "framework"            : "net6.0",
-    "function-name"        : "business-process-weather-data",
+    "function-name"        : "reports-weather-data",
     "package-type"         : "Zip",
-    "function-role"        : "arn:aws:iam::050752614353:role/lambda_exec_business-process-weather-data",
+    "function-role"        : "arn:aws:iam::050752614353:role/lambda_exec_reports-weather-data",
     "function-architecture" : "x86_64",
     "function-subnets"      : "",
     "function-security-groups" : "",
     "tracing-mode"             : "PassThrough",
     "environment-variables"    : "",
-    "image-tag"                : ""
+    "image-tag"                : "",
+    "function-description"     : ""
 }

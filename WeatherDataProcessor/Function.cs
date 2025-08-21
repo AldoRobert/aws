@@ -9,6 +9,17 @@ namespace WeatherDataProcessor;
 
 public class Function
 {
+    /*
+     *   1.- business-process-weather-data in AWS with   context.Logger.LogInformation($"Processed record {record.Sns.Message}");
+     *   
+     *   2.- reports-weather-data in AWS with context.Logger.LogInformation($"Processing Reports {record.Sns.Message}");
+     *   3.- Added attribute in WeatherDataProcessor controller . fx=PostSNS(WeatherForecast data) to add new attribit to filter in the reports-weather-data lambda fx 
+     * 
+     */
+
+
+
+
     /// <summary>
     /// Default constructor. This constructor is used by Lambda to construct the instance. When invoked in a Lambda environment
     /// the AWS credentials will come from the IAM role associated with the function and the AWS region will be set to the
@@ -37,7 +48,7 @@ public class Function
 
     private async Task ProcessRecordAsync(SNSEvent.SNSRecord record, ILambdaContext context)
     {
-        context.Logger.LogInformation($"Processed record {record.Sns.Message}");
+        context.Logger.LogInformation($"Processing Reports {record.Sns.Message}");
 
         // TODO: Do interesting work based on the new message
         await Task.CompletedTask;
