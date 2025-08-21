@@ -2,3 +2,5 @@
 **aws-s3/appsettings.json
 **aws-s3/bin
 **aws-s3/obj
+**WeatherDataProcessor/bin
+**WeatherDataProcessor/obj

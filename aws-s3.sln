@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36414.22 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aws-s3", "aws-s3\aws-s3.csproj", "{559530FB-C4C5-49A5-87B3-EA5ACB833374}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherDataProcessor", "WeatherDataProcessor\WeatherDataProcessor.csproj", "{F2BF0826-3E9D-3908-27D3-46A9C1EBF1E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{559530FB-C4C5-49A5-87B3-EA5ACB833374}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{559530FB-C4C5-49A5-87B3-EA5ACB833374}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{559530FB-C4C5-49A5-87B3-EA5ACB833374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2BF0826-3E9D-3908-27D3-46A9C1EBF1E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2BF0826-3E9D-3908-27D3-46A9C1EBF1E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2BF0826-3E9D-3908-27D3-46A9C1EBF1E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2BF0826-3E9D-3908-27D3-46A9C1EBF1E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
