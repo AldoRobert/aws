@@ -38,8 +38,8 @@ namespace aws_s3.Controllers
             })
             .ToArray();
         }
-       
-        
+
+
         /*
          *   1.- No me permite crear bucket desde robert-aws-vs2022
          * 
@@ -48,17 +48,21 @@ namespace aws_s3.Controllers
          *    3.- create files and folder in buckets
          *    
          *    4.- accessKey and secret from appsettings.json
+         *    
+         *    5.- Delete a file from a Bucket
+         *    
+         *    TODO: 6.- Add Dependency Injection for s3Client 
          */
-        
-        
-        
-        
-        
+
+
+
+
+
         [HttpPost]
         public async Task Post(IFormFile formFile)
         {
 
-           
+
 
             //4.- accessKey and secret from appsettings.json
             var config = new ConfigurationBuilder()
@@ -89,11 +93,11 @@ namespace aws_s3.Controllers
             var objectRequest = new PutObjectRequest()
             {
                 BucketName = "youtube-robert-demo-bucket",
-                Key = $"{DateTime.Now:yyyy\\/MM\\/dd\\/hhmmss}-{ formFile.FileName }",
+                Key = $"{DateTime.Now:yyyy\\/MM\\/dd\\/hhmmss}-{formFile.FileName}",
                 InputStream = formFile.OpenReadStream()
             };
 
-           var response= await client.PutObjectAsync(objectRequest);
+            var response = await client.PutObjectAsync(objectRequest);
         }
 
         //to retrieve the file
@@ -113,12 +117,12 @@ namespace aws_s3.Controllers
             var client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.USEast2);
 
             var response = await client.GetObjectAsync("youtube-robert-demo-bucket", fileName);
-           
+
 
             //para ver el contenido del file 
-            using var reader = new StreamReader(response.ResponseStream);         
+            using var reader = new StreamReader(response.ResponseStream);
 
-            var fileContents= await reader.ReadToEndAsync();
+            var fileContents = await reader.ReadToEndAsync();
 
 
             return File(response.ResponseStream, response.Headers.ContentType);
@@ -154,7 +158,24 @@ namespace aws_s3.Controllers
             return Ok();
         }
 
+        //5.- Delete a file from a Bucket
 
+        [HttpDelete]
+        public async Task Delete(string fileName)
+        {
+            var config = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile("appsettings.json")
+                          .Build();
+
+            var accessKey = config.GetValue<string>("AccessKey");
+            var secret = config.GetValue<string>("Secret");
+
+            var credentials = new BasicAWSCredentials(accessKey, secret);
+            var client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.USEast2);
+
+            await client.DeleteObjectAsync(BucketName2, fileName);
+        }
 
     }
 
