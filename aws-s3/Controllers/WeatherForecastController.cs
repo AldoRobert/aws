@@ -124,9 +124,37 @@ namespace aws_s3.Controllers
             return File(response.ResponseStream, response.Headers.ContentType);
         }
 
-       
+        //Retrieves a list of files
+        [HttpGet("GetFiles")]
+        public async Task<IActionResult> GetFiles(string prefix)
+        {
+            //4.- accessKey and secret from appsettings.json
+            var config = new ConfigurationBuilder()
+                           .SetBasePath(Directory.GetCurrentDirectory())
+                           .AddJsonFile("appsettings.json")
+                           .Build();
 
-       
+            var accessKey = config.GetValue<string>("AccessKey");
+            var secret = config.GetValue<string>("Secret");
+
+            var credentials = new BasicAWSCredentials(accessKey, secret);
+            var client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.USEast2);
+
+            var request = new ListObjectsV2Request()
+            {
+                BucketName = BucketName2,
+                Prefix = prefix
+            };
+
+            var response = await client.ListObjectsV2Async(request);
+
+            //TODO: read the content of the first file.
+
+
+            return Ok();
+        }
+
+
 
     }
 
