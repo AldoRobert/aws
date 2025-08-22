@@ -3,6 +3,8 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
+using Amazon.SQS;
+using Amazon.SQS.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
@@ -59,6 +61,9 @@ namespace aws_s3.Controllers
          *    7.- SNS create a message in a topic (SNS).
          *    
          *    8.- added WeatherDataProcessor project
+         *    
+         *    9.- SQS
+         *    
          */
 
 
@@ -207,10 +212,10 @@ namespace aws_s3.Controllers
                 Subject = "NewWeatherDataAdded"
             };
 
-            request.MessageAttributes = new Dictionary<string, MessageAttributeValue>();
+            request.MessageAttributes = new Dictionary<string, Amazon.SimpleNotificationService.Model.MessageAttributeValue>();
 
 
-            request.MessageAttributes.Add("Month", new MessageAttributeValue()
+            request.MessageAttributes.Add("Month", new Amazon.SimpleNotificationService.Model.MessageAttributeValue()
             {
                 DataType="String",
                 StringValue=data.Date.ToString("MMMM")
@@ -218,6 +223,39 @@ namespace aws_s3.Controllers
 
             var response = await client.PublishAsync(request);
         }
+
+        //9.- SQS
+        /*
+         *  a)  Create SQS in AWS, create user, create inline policy to access that Queue created.
+         *   user=youtube-sqs-user   with Access and secrets and inline policy =youtube-demo-sqs-policy with full access to the Queue
+         * 
+         */
+        [HttpPost("PostSQS")]
+        public async Task PostSQS(WeatherForecast data)
+        {
+            var config = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile("appsettings.json")
+                          .Build();
+
+            var accessKey = config.GetValue<string>("AccessKeySQS");
+            var secret = config.GetValue<string>("SecretSQS");
+
+            var credentials = new BasicAWSCredentials(accessKey, secret);
+
+            var client = new AmazonSQSClient(credentials, Amazon.RegionEndpoint.USEast2);
+
+            var request = new SendMessageRequest()
+            {
+                QueueUrl = "https://sqs.us-east-2.amazonaws.com/050752614353/youtube-demo-sqs",//arn:aws:sqs:us-east-2:050752614353:youtube-demo-sqs
+                MessageBody = JsonSerializer.Serialize(data)
+               
+            };
+           
+            var response = await client.SendMessageAsync(request);
+        }
+
+
     }
 
 }
