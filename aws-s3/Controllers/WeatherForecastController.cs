@@ -64,6 +64,8 @@ namespace aws_s3.Controllers
          *    
          *    9.- SQS
          *    
+         *    10.- Background service to read the messages.
+         *    
          */
 
 
@@ -247,9 +249,8 @@ namespace aws_s3.Controllers
 
             var request = new SendMessageRequest()
             {
-                QueueUrl = "https://sqs.us-east-2.amazonaws.com/050752614353/youtube-demo-sqs",//arn:aws:sqs:us-east-2:050752614353:youtube-demo-sqs
-                MessageBody = JsonSerializer.Serialize(data)
-               
+                QueueUrl = "https://sqs.us-east-2.amazonaws.com/050752614353/youtube-demo-sqs",
+                MessageBody = JsonSerializer.Serialize(data)               
             };
            
             var response = await client.SendMessageAsync(request);
