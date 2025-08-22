@@ -1,3 +1,5 @@
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -8,6 +10,7 @@ using Amazon.SQS.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace aws_s3.Controllers
 {
@@ -21,10 +24,12 @@ namespace aws_s3.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IDynamoDBContext _dynamoDBContext;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IDynamoDBContext dynamoDBContext)
         {
             _logger = logger;
+            _dynamoDBContext = dynamoDBContext;
         }
 
 
@@ -66,6 +71,12 @@ namespace aws_s3.Controllers
          *    
          *    10.- Background service to read the messages.
          *    
+         *    
+         *    11.- DynamoDB   new class WeatherForecastCity
+         *    Table created in AWS, two items created
+         *    PartitionKey=City, Sort Key=Date
+         *    adding package AWSSDK.DynamoDB
+         *    created user dynamodb-user with AmazonDynamoDBFullAccess permissions added
          */
 
 
@@ -256,6 +267,32 @@ namespace aws_s3.Controllers
             var response = await client.SendMessageAsync(request);
         }
 
+
+        //DynamoDB
+        [HttpGet("GetCity")]
+        public async Task<IEnumerable<WeatherForecastCity>> GetCity(string city = "Brisbane")
+        {
+
+            //var key = new Dictionary<string, AttributeValue>
+            //{
+            //    ["Cty"] = new AttributeValue { S = city },
+
+            //};
+
+            //var request = new GetItemRequest
+            //{
+            //    Key = key,
+            //    TableName = "WeatherForecast",
+            //};
+
+            //var response = await _dynamoDBContext.QueryAsync<WeatherForecastCity>(city).GetItemAsync(request);
+
+            //return response;
+            return await _dynamoDBContext
+               .QueryAsync<WeatherForecastCity>(city)
+              .GetRemainingAsync();
+
+        }
 
     }
 
